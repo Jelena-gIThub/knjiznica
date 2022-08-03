@@ -1,0 +1,99 @@
+<div class="container">
+  <p>Poštovani korisnici, ispunite obrazac kako biste se učlanili.</p>
+  <form action="/uclani-se">
+    <div class="row">
+      <div class="col-15">
+        <label for="ime">Ime</label>
+      </div>
+      <div class="col-85">
+        <input type="text" id="ime" name="ime" required />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-15">
+        <label for="prezime">Prezime</label>
+      </div>
+      <div class="col-85">
+        <input type="text" id="prezime" name="prezime" required />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-15">
+        <label for="adresa">Adresa</label>
+      </div>
+      <div class="col-85">
+        <input type="text" id="adresa" name="adresa" required />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-15">
+        <label for="email">E-mail</label>
+      </div>
+      <div class="col-85">
+        <input type="text" id="email" name="email" required />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-15">
+        <label for="broj_telefona">Broj telefona</label>
+      </div>
+      <div class="col-85">
+        <input type="text" id="broj_telefona" name="broj_telefona" required />
+      </div>
+    </div>
+
+    <div class="row">
+      <input type="submit" id="posalji" value="Pošalji" />
+    </div>
+  </form>
+</div>
+
+<!--
+Nakon popunjavanja i klika pošalji, u bazu se šalju ovi gore podaci + datum učlanjenja + dodjeljuje se ID_clan.
+Treba se vratiti poruka: Uspješno ste se učlanili! Vaš članski broj je:
+.-->
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#posalji').on('click', function(e) {
+      e.preventDefault();
+
+      if (
+        $('#ime').val() !== '' &&
+        $('#prezime').val() !== '' &&
+        $('#adresa').val() !== '' &&
+        $('#email').val() !== '' &&
+        $('#broj_telefona').val() !== ''
+      ) {
+        $.ajax({
+          url: 'http://localhost/knjiznica/public/uclani-se',
+          type: 'GET',
+          data: {
+            ime: $('#ime').val(),
+            prezime: $('#prezime').val(),
+            adresa: $('#adresa').val(),
+            email: $('#email').val(),
+            broj_telefona: $('#broj_telefona').val(),
+            ajax: true
+          },
+          success: function(result) {
+            var results = JSON.parse(result);
+
+            $('#ime').val('');
+            $('#prezime').val('');
+            $('#adresa').val('');
+            $('#email').val('');
+            $('#broj_telefona').val('');
+
+            alert('Uspješno ste se učlanili u knjižnicu. Vaš ID = ' + results.id);
+          },
+          error: function(result) {
+            alert('Dogodila se pogreška, pokušajte ponovno popuniti sva polja i poslati podatke.');
+          }
+        });
+      } else {
+        alert('Molimo popunite sva polja prije slanja Vaših podataka.');
+      }
+    });
+  });
+</script>

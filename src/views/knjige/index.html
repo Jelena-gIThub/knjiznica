@@ -1,0 +1,84 @@
+<div class="carousel-knjige">
+  <input type="radio" name="position" />
+  <input type="radio" name="position" />
+  <input type="radio" name="position"  checked />
+  <input type="radio" name="position" />
+  <input type="radio" name="position" />
+
+  <main id="carousel">
+    <div class="item"><img src="../../../knjiznica/public/assets/img/MALI HOTEL NA ISLANDU .png" alt="Island"/></div>
+    <div class="item"><img src="../../../knjiznica/public/assets/img/BRANKO I STANKO U SVIJETU ATOMA.png" alt="BrankoiStanko"/></div>
+    <div class="item"><img src="../../../knjiznica/public/assets/img/MALI PRINC .png" alt="Maliprinc"/></div>
+    <div class="item"><img src="../../../knjiznica/public/assets/img/MALI KAFIC U KOPENHAGENU .png" alt="Malikafic"/></div>
+    <div class="item"><img src="../../../knjiznica/public/assets/img/DANSKI ODGOJ DJECE .png" alt="Danska"/></div>
+  </main>
+</div>
+
+<div class="row">
+  <button class="prikaz-knjiga" data-status="prikazi">Prikaži sve knjige</button>
+</div>
+
+<div id="lista-knjiga" class="container" style="visibility: hidden">
+  <p>Ovdje možete vidjeti naš katalog knjiga!</p>
+  <div style="overflow-x:auto;">
+      <table>
+       <thead>
+         <th>Naziv</th> <!--tablica Knjige (naslov) -->
+         <th>Autor</th> <!--tablica Autori (ime, prezime)-->
+         <th>ISBN</th>  <!--tablica Knjige (isbn) -->
+         <th>Godina izdanja</th>  <!--tablica Knjige (godina_izdanja) -->
+         <th>Izdavač</th>  <!--tablica Izdavaci (naziv_izdavac) -->
+         <th>Kategorija</th>  <!--tablica Kategorije (naziv_kategorija) -->
+       </thead>
+       <tbody></tbody>
+     </table>
+ </div>
+</div>
+
+<div class="nema-rezultata" style="visibility: hidden">Nema knjiga u bazi.</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+      $('.prikaz-knjiga').on('click', function () {
+        if ($(this).attr('data-status') === 'prikazi') {
+            $.ajax({
+                url: 'http://localhost/knjiznica/public/knjige',
+                type: 'GET',
+                data: {
+                    ajax: true
+                },
+                success: function (rezultat) {
+                  var parsiraniRezultat = JSON.parse(rezultat);
+
+                  if (parsiraniRezultat) {
+                    var ispisKnjiga = '';
+
+                    parsiraniRezultat.forEach(function (vrijednost) {
+                      ispisKnjiga += '<tr><td>' + vrijednost[2] + '</td>';
+                      ispisKnjiga += '<td>' + vrijednost[0] + ' ' + vrijednost[1] + '</td>';
+                      ispisKnjiga += '<td>' + vrijednost[3] + '</td>';
+                      ispisKnjiga += '<td>' + vrijednost[4] + '</td>';
+                      ispisKnjiga += '<td>' + vrijednost[5] + '</td>';
+                      ispisKnjiga += '<td>' + vrijednost[6] + '</td></tr>';
+                    });
+
+                    $('tbody').empty().append(ispisKnjiga);
+                    $('#lista-knjiga').css('visibility', 'visible');
+                    $('.prikaz-knjiga').attr('data-status', 'sakrij').text('Sakrij prikaz knjiga');
+                } else {
+                   $('.nema-rezultata').css('visibility', 'visible');
+                }
+              },
+              error: function (rezultat) {
+                alert('Dogodila se pogreška prilikom dohvaćanja rezultata.');
+              }
+            });
+        } else {
+          $('#lista-knjiga').css('visibility', 'hidden');
+          $('.prikaz-knjiga').attr('data-status', 'prikazi').text('Prikaži sve knjige');
+        }
+      });
+
+    });
+</script>

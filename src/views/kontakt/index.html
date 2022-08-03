@@ -1,0 +1,86 @@
+<div class="container">
+  <p>Poštovani korisnici, ovdje nam možete uputiti vaše poruke.</p>
+  <form action="kontakt.php">
+    <div class="row">
+      <div class="col-15">
+        <label for="ime">Ime</label>
+      </div>
+      <div class="col-85">
+        <input type="text" id="ime" name="firstname" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-15">
+        <label for="prezime">Prezime</label>
+      </div>
+      <div class="col-85">
+        <input type="text" id="prezime" name="lastname" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-15">
+        <label for="email">E-mail</label>
+      </div>
+      <div class="col-85">
+        <input type="text" id="email" name="Email" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-15">
+        <label for="poruka">Poruka</label>
+      </div>
+      <div class="col-85">
+        <textarea
+          id="poruka"
+          name="poruka"
+          style="height: 200px"
+        ></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <input type="submit" id="posalji" value="Pošalji" />
+    </div>
+  </form>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    $('#posalji').on('click', function(e) {
+      e.preventDefault();
+
+      if (
+        $('#ime').val() !== '' &&
+        $('#prezime').val() !== '' &&
+        $('#email').val() !== '' &&
+        $('#poruka').val() !== ''
+      ) {
+        $.ajax({
+          url: 'http://localhost/knjiznica/public/kontakt',
+          type: 'GET',
+          data: {
+            ime: $('#ime').val(),
+            prezime: $('#prezime').val(),
+            email: $('#email').val(),
+            poruka: $('#poruka').val(),
+            ajax: true
+          },
+          success: function(rezultat) {
+            $('#ime').val('');
+            $('#prezime').val('');
+            $('#email').val('');
+            $('#poruka').val('');
+
+            alert('Vaša poruka je uspješno poslana.');
+          },
+          error: function(rezultat) {
+            alert('Dogodila se pogreška prilikom slanja poruke, molimo pokušajte ponovno.');
+          }
+        });
+      } else {
+        alert('Molimo popunite sva polja da bi poslali poruku.');
+      }
+    });
+
+  });
+</script>
